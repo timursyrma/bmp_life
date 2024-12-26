@@ -59,8 +59,6 @@ void run(BMPImage bmp, int maxIter, int dumpFreq, int isShow, const char *outdir
             usleep(100000);
         }
 
-        evolve(bmp.pixelData, bmp.infoHeader.biWidth, bmp.infoHeader.biHeight);
-
         if (dumpFreq > 0 && (iter % dumpFreq == 0)) {
             char filename[300];
             sprintf(filename, "%s/generation_%d.bmp", outdir, iter);
@@ -69,5 +67,7 @@ void run(BMPImage bmp, int maxIter, int dumpFreq, int isShow, const char *outdir
             saveBMP(bmp, fout);
             fclose(fout);
         }
+
+        evolve(bmp.pixelData, bmp.infoHeader.biWidth, bmp.infoHeader.biHeight);
     }
 }
