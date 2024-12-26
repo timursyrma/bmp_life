@@ -16,9 +16,8 @@ int main(int argc, char *argv[]) {
     BMPImage bmpImage = readBMP(fptr);
     fclose(fptr); // Закрываем файл после чтения
 
-    FILE *outputFile = fopen("output.bmp", "wb");
-    saveBMP(bmpImage, outputFile);
-    fclose(outputFile);
+    run(bmpImage, config.maxIter, config.dumpFreq, config.show, config.outputDir);
+
 
     free(bmpImage.colorTable);
     free(bmpImage.pixelData);

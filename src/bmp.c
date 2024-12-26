@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "bmp.h"
 #include "utils.h"
@@ -52,5 +53,21 @@ void saveBMP(BMPImage bmp, FILE *output) {
 }
 
 void run(BMPImage bmp, int maxIter, int dumpFreq, int isShow, const char *outdir) {
-    
+    for (int iter = 0; iter < maxIter; iter++) {
+        evolve(bmp.pixelData, bmp.infoHeader.biWidth, bmp.infoHeader.biHeight);
+
+        if (dumpFreq > 0 && (iter % dumpFreq == 0)) {
+            char filename[300];
+            sprintf(filename, "%s/output_%d.bmp", outdir, iter);
+            
+            FILE *fout = fopen(filename, "wb");
+            saveBMP(bmp, fout);
+            fclose(fout);
+        }
+
+        if (isShow) {
+            usleep(300000);
+            show(bmp.pixelData, bmp.infoHeader.biWidth, bmp.infoHeader.biHeight);
+        }
+    }
 }
