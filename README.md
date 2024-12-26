@@ -1,3 +1,5 @@
+![bmp_life_demo_gif](demo.gif)
+
 # bmp_life
 
 **bmp_life** is a console-based program that processes a monochrome BMP image as the initial state of Conway's Game of Life. It generates new generations of the game and saves them as BMP files. The program also supports optional visualization of the generations in the console.
