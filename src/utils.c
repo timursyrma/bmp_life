@@ -11,10 +11,9 @@ void show(uint8_t *data, int w, int h) {
 
     int needed_raw  = (w + 8 - 1) / 8; 
 
+    printf("\033[2J\033[H");
 
-    printf("\033[H");
-
-    for (int y = 0; y < h; y++) {
+    for (int y = h - 1; y > -1; y--) {
         const uint8_t *row_ptr = data + y * padded_raw;
         for (int x = 0; x < needed_raw; x++) {
             uint8_t byte_val = row_ptr[x];
@@ -22,7 +21,9 @@ void show(uint8_t *data, int w, int h) {
                 int pixel_pos = x * 8 + (7 - bit);
                 // Проверяем, не выходим ли мы за реальную ширину
                 if (pixel_pos < w) {
-                    printf("%s", (byte_val & (1 << bit)) ? "  " : "\033[07m  \033[m");
+                    printf("%s", (byte_val & (1 << bit))
+                                 ? "  "
+                                 : "\033[07m  \033[m");
                 }
             }
         }
@@ -66,18 +67,18 @@ void evolve(uint8_t *data, int w, int h) {
             int n = 0;
             for (int yy = y - 1; yy <= y + 1; yy++) {
                 for (int xx = x - 1; xx <= x + 1; xx++) {
-                    if (GET_BIT(data, xx, yy)) {
+                    if (!GET_BIT(data, xx, yy)) {
                         n++;
                     }
                 }
             }
             // Если клетка была живой — вычитаем её саму из числа соседей
-            int alive = GET_BIT(data, x, y);
+            int alive = !GET_BIT(data, x, y);
             if (alive) {
                 n--;
             }
             // Правила жизни Конвея: рождается, выживает, умирает
-            int next_val = (n == 3 || (n == 2 && alive)) ? 1 : 0;
+            int next_val = (n == 3 || (n == 2 && alive)) ? 0 : 1;
             SET_BIT(next, x, y, next_val);
         }
     }
